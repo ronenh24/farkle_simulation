@@ -1,7 +1,7 @@
 # Author: Ronen H
 
 from tqdm import tqdm
-from farkle_strategies import strategy_two, strategy_eight_to_thirteen
+from farkle_strategies import strategy_one_two_three, strategy_four_and_five, strategy_six_and_seven, strategy_eight_to_thirteen
 import matplotlib.pyplot as plt
 
 
@@ -9,16 +9,11 @@ def convergence_plot(strategy_1: int, strategy_2: int, simulations: int = 10, ga
     '''
     Convergence plot of the estimated probability of winning for Player 1.
 
-    strategy_1: Strategy Player 1 uses (2, 8, 9, 10, 11, 12, or 13).
-    strategy_2: Strategy Player 2 uses (2, 8, 9, 10, 11, 12, or 13).
+    strategy_1: Strategy Player 1 uses (1 to 13).
+    strategy_2: Strategy Player 2 uses (1 to 13).
     simulations: Number of simulations to run. Defaults to 10.
     games: Number of Farkle games per simulation. Defaults to 100,000.
     '''
-    if strategy_1 < 2 or (strategy_1 > 2 and strategy_1 < 8) or strategy_1 > 13:
-        raise Exception('Not a Strategy.')
-    if strategy_2 < 2 or (strategy_2 > 2 and strategy_2 < 8) or strategy_2 > 13:
-        raise Exception('Not a Strategy.')
-    
     # List of the estimates of
     # the true probability Player 1 
     # wins.
@@ -67,29 +62,49 @@ def convergence_plot(strategy_1: int, strategy_2: int, simulations: int = 10, ga
                 
                 # Player 1's turn.
                 if turn == 1:
-                        
-                    # Player 1 uses Strategy 2.
-                    if strategy_1 == 2:
-                        current_score_1 = strategy_two(current_score_1, goal_score)
 
-                    # Player 1 uses other Strategy.
+                    # Player 1 uses Strategy 1, Strategy 2, or Strategy 3.
+                    if strategy_1 == 1 or strategy_1 == 2 or strategy_1 == 3:
+                        current_score_1 = strategy_one_two_three(current_score_1, goal_score, strategy_1)
+                    
+                    # Player 1 uses Strategy 4 or Strategy 4.
+                    elif strategy_1 == 4 or strategy_1 == 5:
+                        current_score_1 = strategy_four_and_five(current_score_1, goal_score, strategy_1)
+
                     else:
                         deficit = current_score_2 - current_score_1
-                        current_score_1 = strategy_eight_to_thirteen(current_score_1, goal_score, deficit, strategy_1)
+
+                        # Player 1 uses Strategy 6 or Strategy 7.
+                        if strategy_1 == 6 or strategy_1 == 7:
+                            current_score_1 = strategy_six_and_seven(current_score_1, goal_score, deficit, strategy_1)
+                        
+                        # Player 1 uses Strategy 8, Strategy 9, Strategy 10, Strategy 11, Strategy 12, or Strategy 13.
+                        else:
+                            current_score_1 = strategy_eight_to_thirteen(current_score_1, goal_score, deficit, strategy_1)
                     
                     turn = 2
 
                 # Player 2's turn.
                 else:
                     
-                    # Player 2 uses Strategy 2.
-                    if strategy_2 == 2:
-                        current_score_2 = strategy_two(current_score_2, goal_score)
+                    # Player 2 uses Strategy 1, Strategy 2, or Strategy 3.
+                    if strategy_2 == 1 or strategy_2 == 2 or strategy_2 == 3:
+                        current_score_2 = strategy_one_two_three(current_score_2, goal_score, strategy_2)
                     
-                    # Player 2 uses other Strategy.
+                    # Player 2 uses Strategy 4 or Strategy 4.
+                    elif strategy_2 == 4 or strategy_2 == 5:
+                        current_score_2 = strategy_four_and_five(current_score_2, goal_score, strategy_2)
+                    
                     else:
                         deficit = current_score_1 - current_score_2
-                        current_score_2 = strategy_eight_to_thirteen(current_score_2, goal_score, deficit, strategy_2)
+
+                        # Player 2 uses Strategy 6 or Strategy 7.
+                        if strategy_2 == 6 or strategy_2 == 7:
+                            current_score_2 = strategy_six_and_seven(current_score_2, goal_score, deficit, strategy_2)
+                        
+                        # Player 2 uses Strategy 8, Strategy 9, Strategy 10, Strategy 11, Strategy 12, or Strategy 13.
+                        else:
+                            current_score_2 = strategy_eight_to_thirteen(current_score_2, goal_score, deficit, strategy_2)
                         
                     turn = 1
             
@@ -147,11 +162,6 @@ def histogram(strategy_1: int, strategy_2: int, simulations: int = 500, games: i
     simulations: Number of simulations to run. Defaults to 500.
     games: Number of Farkle games per simulation. Defaults to 1,000.
     '''
-    if strategy_1 < 2 or (strategy_1 > 2 and strategy_1 < 8) or strategy_1 > 13:
-        raise Exception('Not a Strategy.')
-    if strategy_2 < 2 or (strategy_2 > 2 and strategy_2 < 8) or strategy_2 > 13:
-        raise Exception('Not a Strategy.')
-    
     # List of average probabilities that 
     # Player 1 wins from all runs.
     winning_probs = []
@@ -187,29 +197,49 @@ def histogram(strategy_1: int, strategy_2: int, simulations: int = 500, games: i
                 
                 # Player 1's turn.
                 if turn == 1:
-                        
-                    # Player 1 uses Strategy 2.
-                    if strategy_1 == 2:
-                        current_score_1 = strategy_two(current_score_1, goal_score)
 
-                    # Player 1 uses other Strategy.
+                    # Player 1 uses Strategy 1, Strategy 2, or Strategy 3.
+                    if strategy_1 == 1 or strategy_1 == 2 or strategy_1 == 3:
+                        current_score_1 = strategy_one_two_three(current_score_1, goal_score, strategy_1)
+                    
+                    # Player 1 uses Strategy 4 or Strategy 4.
+                    elif strategy_1 == 4 or strategy_1 == 5:
+                        current_score_1 = strategy_four_and_five(current_score_1, goal_score, strategy_1)
+
                     else:
                         deficit = current_score_2 - current_score_1
-                        current_score_1 = strategy_eight_to_thirteen(current_score_1, goal_score, deficit, strategy_1)
+
+                        # Player 1 uses Strategy 6 or Strategy 7.
+                        if strategy_1 == 6 or strategy_1 == 7:
+                            current_score_1 = strategy_six_and_seven(current_score_1, goal_score, deficit, strategy_1)
+                        
+                        # Player 1 uses Strategy 8, Strategy 9, Strategy 10, Strategy 11, Strategy 12, or Strategy 13.
+                        else:
+                            current_score_1 = strategy_eight_to_thirteen(current_score_1, goal_score, deficit, strategy_1)
                     
                     turn = 2
 
                 # Player 2's turn.
                 else:
                     
-                    # Player 2 uses Strategy 2.
-                    if strategy_2 == 2:
-                        current_score_2 = strategy_two(current_score_2, goal_score)
+                    # Player 2 uses Strategy 1, Strategy 2, or Strategy 3.
+                    if strategy_2 == 1 or strategy_2 == 2 or strategy_2 == 3:
+                        current_score_2 = strategy_one_two_three(current_score_2, goal_score, strategy_2)
                     
-                    # Player 2 uses other Strategy.
+                    # Player 2 uses Strategy 4 or Strategy 4.
+                    elif strategy_2 == 4 or strategy_2 == 5:
+                        current_score_2 = strategy_four_and_five(current_score_2, goal_score, strategy_2)
+                    
                     else:
                         deficit = current_score_1 - current_score_2
-                        current_score_2 = strategy_eight_to_thirteen(current_score_2, goal_score, deficit, strategy_2)
+
+                        # Player 2 uses Strategy 6 or Strategy 7.
+                        if strategy_2 == 6 or strategy_2 == 7:
+                            current_score_2 = strategy_six_and_seven(current_score_2, goal_score, deficit, strategy_2)
+                        
+                        # Player 2 uses Strategy 8, Strategy 9, Strategy 10, Strategy 11, Strategy 12, or Strategy 13.
+                        else:
+                            current_score_2 = strategy_eight_to_thirteen(current_score_2, goal_score, deficit, strategy_2)
                         
                     turn = 1
             
