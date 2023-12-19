@@ -2,7 +2,7 @@
 Ronen H 
 
 # Time Frame
-December 2022.  
+December 2021.  
 
 # Farkle
 The rules of Farkle can be seen in the *In a Nutshell* section of [https://farkle.games/official-rules/](https://farkle.games/official-rules/). In this case, there are two players with **Player 1** as the first player and **Player 2** as the second player.  
