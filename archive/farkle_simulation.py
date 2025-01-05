@@ -254,8 +254,8 @@ def histogram(strategy_1: int, strategy_2: int, simulations: int = 500, games: i
         # The average probability of Player 1 winning 
         # for the current run is added to the list of 
         # average probabilities of Player 1 winning.
-        # winning_prob = 1.0 * total_wins_1 / games
-        # winning_probs.append(winning_prob)
+        winning_prob = 1.0 * total_wins_1 / games
+        winning_probs.append(winning_prob)
 
     # Plots the histogram of average probabilities
     # Player 1 wins. 

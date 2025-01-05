@@ -2,7 +2,7 @@
 Ronen H 
 
 # Time Frame
-November 2021 to December 2021 (modified for Python usage).  
+November 2021 to December 2021 (modified for Python usage), January 2025 (improvement).  
 
 # Farkle
 The rules of Farkle can be seen in the *In a Nutshell* section of [https://farkle.games/official-rules/](https://farkle.games/official-rules/). In this case, there are two players with **Player 1** as the first player and **Player 2** as the second player.
@@ -10,7 +10,8 @@ The rules of Farkle can be seen in the *In a Nutshell* section of [https://farkl
 The scoring system can be seen in the table below
 <table style="margin-left: auto; margin-right: auto;">
   <tr><th>Dice to Keep</th> <th>Score</th>
-  <tr><td>Three 1s</td> <td>1000</td>
+  <tr><td>Three 1s or Straight</td> <td>1000</td>
+  <tr><td>Three Different Pairs</td> <td>750</td>
   <tr><td>Three 6s</td> <td>600</td>
   <tr><td>Three 5s</td> <td>500</td>
   <tr><td>Three 4s</td> <td>400</td>
@@ -23,39 +24,31 @@ The scoring system can be seen in the table below
 
 # Strategies
 The strategies that Player 1 and Player 2 can use are:
-- Strategy 1: Roll once. Keep maximum roll score.
-- Strategy 2: Keep rolling dice until two or less left. For each roll, keep maximum roll score. If there are no dice remaining, roll all six again.
-- Strategy 3: Same as Strategy 2 but stop if no dice remaining.
-- Strategy 4: Keep rolling dice until two or less left. For each roll, keep maximum single score. If there are no dice remaining, roll all sixe again.
-- Strategy 5: Same as Strategy 4 but stop if no dice remaining.
-- Strategy 6: Keep rolling dice until at least equal to the other score. For each roll, keep maximum roll score.
-- Strategy 7: Same as Strategy 6 but keep maximum single score for each roll.
-- Strategy 8: If behind by more than 100, for each roll, keep maximum roll score. Keep rolling dice until behind by 100 or less. Default to Strategy 2.
-- Strategy 9: Same as Strategy 8 but by 200.
-- Strategy 10: Same as Strategy 8 but by 500.
-- Strategy 11: Same as Strategy 8 but by 1000.
-- Strategy 12: Same as Strategy 8 but by 1500.
-- Strategy 13: Same as Strategy 8 but by 2000.
+- Naive Strategy: For each roll, choose action that maximizes roll score and stop if number of dice is less than or equal to 2 and disadvantage of less than 1,000.
+- Simple RL Strategy: For each roll, choose action that maximizes reward based on distance to 10,000, advantage, current turn score, number of dice, and number of rolls.
 
-.  
+The implementation of the strategies is in `strategy.py`.
 
-The implementation of the strategies is in `farkle_strategies.py`.  
+## Simple RL Strategy
+Reward is based on roll score and increases as number of rolls does. If farkled, then the roll score is negative of the turn score.
+
+The architecture of the deep Q-learning network which takes an input state (distance, advantage, current turn score, number of dice, number of rolls) and predicts reward for each action (take 1, take 2, take 3, take 4, take 5, take 6, stop) can be seen in `architecture.py`.
+
+The training process can be seen in `simple_farkle_rl.py`. The plot of turn score by current score can be seen in **[plots/training_simple_rl.jpg](plots/training_simple_rl.jpg)** and the table in **[tables/training_simple_rl.csv](tables/training_simple_rl.csv)**.
+![Training Simple RL](plots/training_simple_rl.jpg)
 
 # Simulation
-The implementation of the simulation is in `farkle_simulation.py`.  
+The implementation of the simulation is in `simulation.py`.  
 
 The `convergence_plot` function plots the expected probability Player 1 wins using some strategy with Player 2 using some other strategy.  
 
 The `histogram` function plots the average probability Player 1 wins using some strategy with Player 2 using some other strategy.  
 
-For example, if Player 1 uses Strategy 2 and Player 2 uses Strategy 8
-```
-from farkle_simulation import convergence_plot, histogram
+For example, if player 1 uses the simple RL strategy and player 2 uses the naive strategy, the convergence plot can be seen in **[plots/convergence_simple_rl_naive.jpg](plots/convergence_simple_rl_naive.jpg)** and the true probability estimates can be seen in **[tables/convergence_simple_rl_naive.csv](tables/convergence_simple_rl_naive.csv)**.
+![Convergence Plot Simple RL vs Naive](plots/convergence_simple_rl_naive.jpg)
 
-# Expected probability Player 1 wins using Strategy 2 with Player 2 using Strategy 8.
-convergence_plot(strategy_1=2, strategy_2=8)
-
-# Average probabilities Player 1 wins using Strategy 2 with Player 2 using Strategy 8.
-histogram(strategy_1=2, strategy_2=8)
+# Pipeline
+To train the simple RL agent and compare the strategies through convergence plot and histogram, run the below command on Powershell.
 ```
-.
+python pipeline.py
+```
