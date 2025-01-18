@@ -148,14 +148,10 @@ def main():
     naive_strategy = NaiveStrategy(True)
 
     convergence_plot(simple_rl_strategy, naive_strategy, 10, 10000)
-    convergence_plot(naive_strategy, naive_strategy, 10, 10000)
     convergence_plot(naive_strategy, simple_rl_strategy, 10, 10000)
-    convergence_plot(simple_rl_strategy, simple_rl_strategy, 10, 10000)
 
     histogram(simple_rl_strategy, naive_strategy, 500, 1000)
-    histogram(naive_strategy, naive_strategy, 500, 1000)
     histogram(naive_strategy, simple_rl_strategy, 500, 1000)
-    histogram(simple_rl_strategy, simple_rl_strategy, 500, 1000)
 
 
 if __name__ == "__main__":

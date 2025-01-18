@@ -50,7 +50,7 @@ class SimpleRLStrategy(BaseStrategy):
                         print("Farkled")
                     current_turn_score = 0
                     break
-                action = self.action([distance, advantage, current_turn_score, num_dice, num_rolls], legal_moves)
+                action = self.action([distance, advantage, current_turn_score, num_rolls] + roll_maxes, legal_moves)
                 if not self.train:
                     print("Action", action_dict[action])
                 current_turn_score += roll_maxes[action - 1]
@@ -66,9 +66,11 @@ class SimpleRLStrategy(BaseStrategy):
         """
         Maximize reward based on state and legal moves.
         """
-        predicted_rewards = self.action_reward(torch.tensor(state).float()).gather(0, torch.tensor(legal_moves) - 1)
-        probs = torch.softmax(predicted_rewards, 0).tolist()
-        action = random.choices(legal_moves, probs)[0]
+        predicted_rewards = self.action_reward.forward(torch.tensor(state).float()).\
+            gather(0, torch.tensor(legal_moves) - 1)
+        if not self.train:
+            print("Predicted Rewards", predicted_rewards.tolist())
+        action = legal_moves[predicted_rewards.argmax().item()]
         return action
 
 
@@ -111,7 +113,8 @@ class NaiveStrategy(BaseStrategy):
         Maximize roll score and stop if less than or equal to two dice left and disadvantage less than 1,000.
         """
         action = np.argmax(roll_maxes[:6]) + 1
-        if state[1] > -1000 and (state[0] - roll_maxes[7 - 1] <= 0 or state[2][action - 1] <= 2):
+        if state[0] - roll_maxes[7 - 1] <= 0 or (state[1] > -1000 and state[2][action - 1] <= 2) or\
+            (state[1] <= -1000 and state[2][action - 1] <= 1):
             action = 7
         return action
 

@@ -1,19 +1,21 @@
-import numpy as np
 from collections import Counter
 from itertools import combinations
 import random
+import os
+import orjson
+from tqdm import tqdm
 
 
 action_dict = {1: "Keep 1", 2: "Keep 2", 3: "Keep 3", 4: "Keep 4", 5: "Keep 5", 6: "Keep 6", 7: "No Roll"}
-distance_scale = 2
-dice_score = {}
-max_dice_score = {}
-
+max_score = {}
+if os.path.isfile("max_score.jsonl"):
+    with open("max_score.jsonl", "rb") as max_score_file:
+        for max_score_line in tqdm(max_score_file):
+            max_score_sub = orjson.loads(max_score_line)
+            max_score[tuple(max_score_sub["dice_combination"])] = max_score_sub["result"]
 
 # Farkle scoring function
 def score_combination(dice_combination: tuple) -> int:
-    if dice_combination in dice_score:
-        return dice_score[dice_combination]
     count = Counter(dice_combination)
     score = 0
     dice_used = 0
@@ -29,7 +31,7 @@ def score_combination(dice_combination: tuple) -> int:
             # Subtract the three used dice from the count
             count[die_value] -= 3
             cnt -= 3
-            dice_used -= 3
+            dice_used += 3
 
     # Add remaining 1s and 5s
     score += count[1] * 100  # Each 1 earns 100 points
@@ -44,7 +46,7 @@ def score_combination(dice_combination: tuple) -> int:
             dice_used = 6
 
     # Check for straight (1, 2, 3, 4, 5, 6)
-    if dice_combination == (1, 2, 3, 4, 5, 6):
+    if len(count) == 6:
         score = max(score, 1000)  # A straight earns 1000 points
         if score == 1000:
             dice_used = 6
@@ -52,17 +54,14 @@ def score_combination(dice_combination: tuple) -> int:
     if dice_used < len(dice_combination):
         score = 0
 
-    dice_score[dice_combination] = score
-
     return score
 
 
 # Function to calculate the maximum score for keeping up to n dice
-def max_scoring_combination(dice_combination: list[int]) -> tuple[list[int], list[int]]:
+def max_scoring_combination(dice_combination: tuple) -> tuple[list[int], list[int]]:
     n = len(dice_combination)
-    dice_combination = tuple(sorted(dice_combination))
-    if dice_combination in max_dice_score:
-        return max_dice_score[dice_combination]
+    if dice_combination in max_score:
+        return max_score[dice_combination][0].copy(), max_score[dice_combination][1].copy()
     max_scores = []
     remaining_dice = []
 
@@ -86,13 +85,13 @@ def max_scoring_combination(dice_combination: list[int]) -> tuple[list[int], lis
 
         remaining_dice.append(remaining_dice_for_i)
 
-    max_dice_score[dice_combination] = (max_scores, remaining_dice)
+    max_score[dice_combination] = (max_scores.copy(), remaining_dice.copy())
 
     return max_scores, remaining_dice
 
 
-def roll_loop(num_dice: int) -> tuple[list[int], list[int], list[int], bool, list[int]]:
-    dice_combination = random.choices(range(1, 6 + 1), k=num_dice)
+def roll_loop(num_dice: int) -> tuple[tuple, list[int], list[int], bool, list[int]]:
+    dice_combination = tuple(sorted(random.choices(range(1, 6 + 1), k=num_dice)))
     max_scores, remaining_dice = max_scoring_combination(dice_combination)
     farkled = sum(max_scores) == 0
     max_scores.extend([0] * (7 - len(remaining_dice)))
