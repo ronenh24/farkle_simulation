@@ -166,3 +166,10 @@ Dice Combination - (2, 6)
 Farkled
 Turn Score - 0
 ```
+
+## References
+Farkle Official Rules. (2025). Retrieved from https://farkle.games/official-rules/
+
+Le Cam, L. (1986). The Central Limit Theorem Around 1935. *Statistical Science*, *1*(1), 78–91. Retrieved from http://www.jstor.org/stable/2245503
+
+Mnih, V., Kavukcuoglu, K., Silver, D. *et al.* (2015). Human-level control through deep reinforcement learning. *Nature* **518**, 529–533. Retrieved from https://doi.org/10.1038/nature14236
