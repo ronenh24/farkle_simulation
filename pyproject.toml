@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+farkle_simulation = [
+  "components/*.pt",
+  "components/max_score.jsonl",
+]
+
+[project]
+name = "farkle-simulation"
+version = "0.1.0"
+authors = [
+  { name="Ronen Huang", email="ronenhuang24@gmail.com" },
+]
+description = "Simulating two-player Farkle with different strategies."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "optuna",
+  "orjson",
+  "scipy",
+  "seaborn",
+  "torch",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+Homepage = "https://github.com/ronenh24/farkle_simulation"
+Issues = "https://github.com/ronenh24/farkle_simulation/issues"

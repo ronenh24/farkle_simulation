@@ -1,11 +1,15 @@
-# Author: Ronen H
+"""
+Author: Ronen Huang
+"""
+
 import torch
 
 
 class SimpleActionReward(torch.nn.Module):
     """
-    Input: State (distance, advantage, current turn score, roll max keep 1, roll max keep 2,
-                  roll max keep 3, roll max keep 4, roll max keep 5, roll max keep 6, roll max stop).
+    Input: State (distance, advantage, current turn score, roll max keep 1,
+                  roll max keep 2, roll max keep 3, roll max keep 4,
+                  roll max keep 5, roll max keep 6, roll max stop).
     Output: Reward (keep 1, keep 2, keep 3, keep 4, keep 5, keep 6, stop).
     """
     def __init__(self):
